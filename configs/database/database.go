@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	_ "github.com/microsoft/go-mssqldb"
 )
 
 func ConnectionSqlServcer() *sql.DB {
@@ -23,6 +24,9 @@ func ConnectionSqlServcer() *sql.DB {
 
 	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s;encrypt=disable;",
 		databaseHost, databaseUser, databasePassword, databasePort, databaseName)
+
+	fmt.Println("Connecting to database...")
+	fmt.Println(connString)
 
 	db, err := sql.Open("sqlserver", connString)
 	if err != nil {

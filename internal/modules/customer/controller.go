@@ -2,13 +2,15 @@ package customer
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
 
 	"github.com/robfig/cron"
 )
 
-func UpdateCustomer(ctx context.Context, db *sql.DB) error {
+func UpdateCustomer(ctx context.Context) error {
 	job := cron.New()
+
+	fmt.Println("Update customer duplicate")
 
 	job.AddFunc("0 0 0 * * *", func() {
 		err := UpdateCustomerDuplicate(ctx, db)
