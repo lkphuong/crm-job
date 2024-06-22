@@ -2,7 +2,6 @@ package voucher_gift
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
 	"github.com/lkphuong/crm-job/internal/utils"
@@ -11,7 +10,7 @@ import (
 
 type Repository struct{}
 
-func (vg *Repository) GetSalePublicCode(ctx context.Context, db *sql.DB) ([]SalePublicCode, error) {
+func (vg *Repository) GetSalePublicCode(ctx context.Context) ([]SalePublicCode, error) {
 
 	var salePublicCode []SalePublicCode
 
@@ -25,7 +24,7 @@ func (vg *Repository) GetSalePublicCode(ctx context.Context, db *sql.DB) ([]Sale
 
 }
 
-func (vg *Repository) GetCoupon(ctx context.Context, db *sql.DB, saleID string) (*Coupon, error) {
+func (vg *Repository) GetCoupon(ctx context.Context, saleID string) (*Coupon, error) {
 
 	var coupon Coupon
 
@@ -38,10 +37,8 @@ func (vg *Repository) GetCoupon(ctx context.Context, db *sql.DB, saleID string) 
 	return &coupon, nil
 }
 
-func (vg *Repository) GetVoucherGift(ctx context.Context, db *sql.DB, code string) (*VoucherGiftCode, error) {
+func (vg *Repository) GetVoucherGift(ctx context.Context, code string) (*VoucherGiftCode, error) {
 	var voucherGiftCode VoucherGiftCode
-
-	fmt.Println("sql: ", fmt.Sprintf(GET_VOUCHER_GIFT, code))
 
 	err := queries.Raw(fmt.Sprintf(GET_VOUCHER_GIFT, code)).Bind(ctx, db, &voucherGiftCode)
 
@@ -52,7 +49,7 @@ func (vg *Repository) GetVoucherGift(ctx context.Context, db *sql.DB, code strin
 	return &voucherGiftCode, nil
 }
 
-func (vg *Repository) GetVoucherGiftExpire(ctx context.Context, db *sql.DB) ([]VoucherGift, error) {
+func (vg *Repository) GetVoucherGiftExpire(ctx context.Context) ([]VoucherGift, error) {
 	var vouchers []VoucherGift
 
 	err := queries.Raw(GET_VOUCHER_GIFT_EXPIRE).Bind(ctx, db, &vouchers)
@@ -64,7 +61,7 @@ func (vg *Repository) GetVoucherGiftExpire(ctx context.Context, db *sql.DB) ([]V
 	return vouchers, nil
 }
 
-func (vg *Repository) UpdateVoucherGiftUsed(ctx context.Context, db *sql.DB) error {
+func (vg *Repository) UpdateVoucherGiftUsed(ctx context.Context) error {
 	_, err := db.ExecContext(ctx, UPDATE_VOUCHER_GIFT_USED)
 
 	if err != nil {
@@ -74,7 +71,7 @@ func (vg *Repository) UpdateVoucherGiftUsed(ctx context.Context, db *sql.DB) err
 	return nil
 }
 
-func (vg *Repository) GetVoucherBirthDuplicate(ctx context.Context, db *sql.DB) ([]VoucherGift, error) {
+func (vg *Repository) GetVoucherBirthDuplicate(ctx context.Context) ([]VoucherGift, error) {
 	var vouchers []VoucherGift
 
 	err := queries.Raw(GET_VOUCHER_BIRTHDAY_DUPLICATE).Bind(ctx, db, &vouchers)
@@ -86,7 +83,7 @@ func (vg *Repository) GetVoucherBirthDuplicate(ctx context.Context, db *sql.DB) 
 	return vouchers, nil
 }
 
-func (vg *Repository) InsertVoucherGift(ctx context.Context, db *sql.DB, name string, start string, end string, saleId string, refSku string) error {
+func (vg *Repository) InsertVoucherGift(ctx context.Context, name string, start string, end string, saleId string, refSku string) error {
 
 	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_VOUCHER_GIFT, name, start, end, refSku, saleId))
 
@@ -97,7 +94,7 @@ func (vg *Repository) InsertVoucherGift(ctx context.Context, db *sql.DB, name st
 	return nil
 }
 
-func (vg *Repository) UpdateVoucherGiftExpire(ctx context.Context, db *sql.DB) error {
+func (vg *Repository) UpdateVoucherGiftExpire(ctx context.Context) error {
 
 	startOfDay := utils.GetCurrentDateStartTime()
 	endOfDay := utils.GetCurrentDateEndTime()

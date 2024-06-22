@@ -5,7 +5,10 @@ import (
 	"fmt"
 
 	"github.com/joho/godotenv"
+	"github.com/lkphuong/crm-job/internal/modules/customer"
 	earning_point "github.com/lkphuong/crm-job/internal/modules/earning-point"
+	notification_schedule "github.com/lkphuong/crm-job/internal/modules/notification-schedule"
+	voucher_gift "github.com/lkphuong/crm-job/internal/modules/voucher-gift"
 )
 
 func main() {
@@ -24,11 +27,12 @@ func main() {
 
 	//r := gin.Default()
 
-	// notification_schedule.DeleteNotificationDraft(ctx)
-	// voucher_gift.VoucherGiftExpire(ctx)
-	// voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
-	// customer.UpdateCustomer(ctx)
-	// earning_point.EarningPointBillHoangDieu2(ctx)
+	notification_schedule.DeleteNotificationDraft(ctx)
+	voucher_gift.VoucherGiftExpire(ctx)
+	voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
+	voucher_gift.UpdateVoucherUsed(ctx)
+	customer.UpdateCustomer(ctx)
+	earning_point.EarningPointBillHoangDieu2(ctx)
 	earning_point.EaringPoint(ctx)
 
 	//r.Run(httpPort)

@@ -10,7 +10,7 @@ func InsertVoucherGiftSalePublicCode(ctx context.Context) error {
 	job := cron.New()
 
 	job.AddFunc("0 */10 * * * *", func() {
-		err := InsertVoucherGift(ctx, db)
+		err := InsertVoucherGift(ctx)
 
 		if err != nil {
 			return
@@ -27,7 +27,23 @@ func VoucherGiftExpire(ctx context.Context) error {
 	job := cron.New()
 
 	job.AddFunc("0 0 * * * *", func() {
-		err := UpdateVoucherGiftExpire(ctx, db)
+		err := UpdateVoucherGiftExpire(ctx)
+
+		if err != nil {
+			return
+		}
+	})
+
+	job.Start()
+
+	return nil
+}
+
+func voucherGiftUsed(ctx context.Context) error {
+	job := cron.New()
+
+	job.AddFunc("0 0 */4 * * *", func() {
+		err := UpdateVoucherUsed(ctx)
 
 		if err != nil {
 			return

@@ -13,7 +13,7 @@ var (
 func EarningPointBillHoangDieu2(ctx context.Context) {
 	job := cron.New()
 
-	job.AddFunc("* * * * * *", func() {
+	job.AddFunc("0 */10 * * * *", func() {
 		service.EaringPointHoangDieu2(ctx)
 	})
 
@@ -23,7 +23,7 @@ func EarningPointBillHoangDieu2(ctx context.Context) {
 func EaringPoint(ctx context.Context) {
 	job := cron.New()
 
-	job.AddFunc("* * * * * *", func() {
+	job.AddFunc("0 */5 * * * *", func() {
 		service.EaringPoint(ctx)
 	})
 

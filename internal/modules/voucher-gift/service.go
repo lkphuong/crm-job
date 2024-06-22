@@ -2,49 +2,40 @@ package voucher_gift
 
 import (
 	"context"
-	"database/sql"
 )
 
 var (
-	_repository Repository
+	repository Repository
 )
 
 func init() {
-	_repository = Repository{}
+	repository = Repository{}
 }
 
-func UpdateVoucherGiftExpire(ctx context.Context, db *sql.DB) error {
+func UpdateVoucherGiftExpire(ctx context.Context) error {
 
-	vouchers, err := _repository.GetVoucherGiftExpire(ctx, db)
-
-	if err != nil {
-		return err
-	}
-
-	if len(vouchers) > 0 {
-		return _repository.UpdateVoucherGiftExpire(ctx, db)
-	}
+	repository.UpdateVoucherGiftExpire(ctx)
 
 	return nil
 }
 
-func InsertVoucherGift(ctx context.Context, db *sql.DB) error {
-	salePuclicCode, err := _repository.GetSalePublicCode(ctx, db)
+func InsertVoucherGift(ctx context.Context) error {
+	salePuclicCode, err := repository.GetSalePublicCode(ctx)
 
 	if err != nil {
 		return err
 	}
 
-	coupon, err := _repository.GetCoupon(ctx, db, salePuclicCode[0].SaleID)
+	coupon, err := repository.GetCoupon(ctx, salePuclicCode[0].SaleID)
 
 	if err != nil {
 		return err
 	}
 
-	voucherGift, _ := _repository.GetVoucherGift(ctx, db, coupon.Code)
+	voucherGift, _ := repository.GetVoucherGift(ctx, coupon.Code)
 
 	if voucherGift == nil {
-		err := _repository.InsertVoucherGift(ctx, db, coupon.Name, coupon.Begin, coupon.End, coupon.SaleID, coupon.RefSku)
+		err := repository.InsertVoucherGift(ctx, coupon.Name, coupon.Begin, coupon.End, coupon.SaleID, coupon.RefSku)
 
 		if err != nil {
 			return err
@@ -53,4 +44,11 @@ func InsertVoucherGift(ctx context.Context, db *sql.DB) error {
 
 	return nil
 
+}
+
+func UpdateVoucherUsed(ctx context.Context) error {
+
+	repository.UpdateVoucherGiftUsed(ctx)
+
+	return nil
 }
