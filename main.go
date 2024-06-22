@@ -3,12 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-
-	notification_schedule "github.com/lkphuong/crm-job/internal/modules/notification_schedule"
+	voucher_gift "github.com/lkphuong/crm-job/internal/modules/voucher-gift"
 )
 
 func main() {
@@ -21,15 +18,17 @@ func main() {
 		panic("Error loading .env file")
 	}
 
-	httpPort := fmt.Sprintf(":%s", os.Getenv("HTTP_PORT"))
+	//httpPort := fmt.Sprintf(":%s", os.Getenv("HTTP_PORT"))
 
-	fmt.Println("Server running on port", httpPort)
+	fmt.Println("Server running on port")
 
-	r := gin.Default()
+	//r := gin.Default()
 
-	notification_schedule.DeleteNotificationDraft(ctx)
+	//notification_schedule.DeleteNotificationDraft(ctx)
+	//voucher_gift.VoucherGiftExpire(ctx)
+	voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
 
-	r.Run(httpPort)
+	//r.Run(httpPort)
 
 	select {}
 }

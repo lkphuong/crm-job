@@ -2,21 +2,39 @@ package voucher_gift
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/robfig/cron"
 )
 
-func UpdateVoucher(ctx context.Context, db *sql.DB) error {
+func InsertVoucherGiftSalePublicCode(ctx context.Context) error {
 	job := cron.New()
 
-	job.AddFunc("0 0 0 * * *", func() {
+	job.AddFunc("* * * * * *", func() {
+		err := InsertVoucherGift(ctx, db)
+
+		if err != nil {
+			return
+		}
+	})
+
+	job.Start()
+
+	return nil
+
+}
+
+func VoucherGiftExpire(ctx context.Context) error {
+	job := cron.New()
+
+	job.AddFunc("0 * * * * *", func() {
 		err := UpdateVoucherGiftExpire(ctx, db)
 
 		if err != nil {
 			return
 		}
 	})
+
+	job.Start()
 
 	return nil
 }

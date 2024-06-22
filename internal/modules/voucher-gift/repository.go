@@ -3,13 +3,56 @@ package voucher_gift
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
+	"github.com/lkphuong/crm-job/internal/utils"
 	"github.com/volatiletech/sqlboiler/queries"
 )
 
-type VoucherGiftRepository struct{}
+type Repository struct{}
 
-func (vg *VoucherGiftRepository) GetVoucherGiftExpire(ctx context.Context, db *sql.DB) ([]VoucherGift, error) {
+func (vg *Repository) GetSalePublicCode(ctx context.Context, db *sql.DB) ([]SalePublicCode, error) {
+
+	var salePublicCode []SalePublicCode
+
+	err := queries.Raw(GET_SALE_CODE_PUBLIC).Bind(ctx, db, &salePublicCode)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return salePublicCode, nil
+
+}
+
+func (vg *Repository) GetCoupon(ctx context.Context, db *sql.DB, saleID string) (*Coupon, error) {
+
+	var coupon Coupon
+
+	err := queries.Raw(fmt.Sprintf(GET_COUPON, saleID)).Bind(ctx, db, &coupon)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &coupon, nil
+}
+
+func (vg *Repository) GetVoucherGift(ctx context.Context, db *sql.DB, code string) (*VoucherGiftCode, error) {
+	var voucherGiftCode VoucherGiftCode
+
+	fmt.Println("sql: ", fmt.Sprintf(GET_VOUCHER_GIFT, code))
+
+	err := queries.Raw(fmt.Sprintf(GET_VOUCHER_GIFT, code)).Bind(ctx, db, &voucherGiftCode)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &voucherGiftCode, nil
+}
+
+func (vg *Repository) GetVoucherGiftExpire(ctx context.Context, db *sql.DB) ([]VoucherGift, error) {
 	var vouchers []VoucherGift
 
 	err := queries.Raw(GET_VOUCHER_GIFT_EXPIRE).Bind(ctx, db, &vouchers)
@@ -21,8 +64,8 @@ func (vg *VoucherGiftRepository) GetVoucherGiftExpire(ctx context.Context, db *s
 	return vouchers, nil
 }
 
-func (vg *VoucherGiftRepository) UpdateVoucherGiftExpire(ctx context.Context, db *sql.DB) error {
-	_, err := db.ExecContext(ctx, UPDATE_VOUCHER_GIFT_EXPIRE)
+func (vg *Repository) UpdateVoucherGiftUsed(ctx context.Context, db *sql.DB) error {
+	_, err := db.ExecContext(ctx, UPDATE_VOUCHER_GIFT_USED)
 
 	if err != nil {
 		return err
@@ -31,7 +74,7 @@ func (vg *VoucherGiftRepository) UpdateVoucherGiftExpire(ctx context.Context, db
 	return nil
 }
 
-func (vg *VoucherGiftRepository) GetVoucherBirthDuplicate(ctx context.Context, db *sql.DB) ([]VoucherGift, error) {
+func (vg *Repository) GetVoucherBirthDuplicate(ctx context.Context, db *sql.DB) ([]VoucherGift, error) {
 	var vouchers []VoucherGift
 
 	err := queries.Raw(GET_VOUCHER_BIRTHDAY_DUPLICATE).Bind(ctx, db, &vouchers)
@@ -41,4 +84,29 @@ func (vg *VoucherGiftRepository) GetVoucherBirthDuplicate(ctx context.Context, d
 	}
 
 	return vouchers, nil
+}
+
+func (vg *Repository) InsertVoucherGift(ctx context.Context, db *sql.DB, name string, start string, end string, saleId string, refSku string) error {
+
+	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_VOUCHER_GIFT, name, start, end, refSku, saleId))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (vg *Repository) UpdateVoucherGiftExpire(ctx context.Context, db *sql.DB) error {
+
+	startOfDay := utils.GetCurrentDateStartTime()
+	endOfDay := utils.GetCurrentDateEndTime()
+
+	_, err := db.ExecContext(ctx, fmt.Sprintf(UPDATE_EXPIRED_VOUCHER_GIFT, endOfDay, startOfDay))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

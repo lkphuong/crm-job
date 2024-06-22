@@ -12,7 +12,7 @@ const (
 			AND used_customer_code IS NULL
 	`
 
-	UPDATE_VOUCHER_GIFT_EXPIRE = `
+	UPDATE_VOUCHER_GIFT_USED = `
 		UPDATE
 			voucher_gift_tbl
 		SET
@@ -39,5 +39,69 @@ const (
 			customer_code
 		HAVING
 			COUNT(customer_code) > 1
+	`
+
+	GET_VOUCHER_GIFT = `
+		SELECT
+			TOP 1 voucher_gift_code
+		FROM
+			voucher_gift_tbl
+		WHERE
+			voucher_gift_code = '%s'
+	`
+
+	GET_SALE_CODE_PUBLIC = `
+		SELECT
+			TOP 1 code, sale_id
+		FROM
+			SaleCodePublic
+		WHERE 
+			trangthai = 4
+		ORDER BY created_date DESC
+	`
+
+	GET_COUPON = `
+		SELECT
+			TOP 1 Coupon.code,
+			Coupon.sale_id,
+			Sale.name,
+			Coupon.[begin],
+			Coupon.[end],
+			Sale.code as ref_sku
+		FROM
+			Coupon JOIN Sale ON Coupon.sale_id = Sale.id
+		WHERE
+			Sale.trangthai = 4 AND Coupon.sale_id = '%s'
+	`
+
+	INSERT_VOUCHER_GIFT = `
+		INSERT INTO voucher_gift_tbl (
+			voucher_gift_code, 
+			voucher_gift_name, 
+			customer_name, 
+			customer_phone, 
+			valid_from, 
+			valid_to, 
+			status, 
+			ref_sku
+		)
+		SELECT
+			code,
+			N'%s',
+			customer_name,
+			tel,
+			'%s',
+			'%s',
+			0,
+			'%s'
+		FROM Coupon
+		WHERE sale_id = '%s'
+	`
+
+	UPDATE_EXPIRED_VOUCHER_GIFT = `
+		UPDATE voucher_gift_tbl set
+			valid_to = '%s'
+		WHERE
+			valid_to = '%s'
 	`
 )
