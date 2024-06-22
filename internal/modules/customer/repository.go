@@ -6,9 +6,9 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 )
 
-type CustomerRepository struct{}
+type Repository struct{}
 
-func (c *CustomerRepository) GetCustomerDuplicate(ctx context.Context) ([]CustomerResponse, error) {
+func (c *Repository) GetCustomerDuplicate(ctx context.Context) ([]CustomerResponse, error) {
 	var customers []CustomerResponse
 
 	err := queries.Raw(GET_CUSTOMER_DUPLICATE).Bind(ctx, db, &customers)
@@ -20,7 +20,7 @@ func (c *CustomerRepository) GetCustomerDuplicate(ctx context.Context) ([]Custom
 	return customers, nil
 }
 
-func (c *CustomerRepository) UpdateCustomerDuplicate(ctx context.Context) error {
+func (c *Repository) UpdateCustomerDuplicate(ctx context.Context) error {
 	_, err := db.ExecContext(ctx, UPDATE_CUSTOMER_DUPLICATE)
 
 	if err != nil {

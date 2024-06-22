@@ -10,7 +10,7 @@ type VoucherBirthday struct {
 }
 
 type VoucherGiftCode struct {
-	VoucherGiftCode string `boil: "voucher_gift_code" json:"voucher_gift_code"`
+	VoucherGiftCode string `boil:"voucher_gift_code" json:"voucher_gift_code"`
 }
 
 type SalePublicCode struct {

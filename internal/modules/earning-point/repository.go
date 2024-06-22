@@ -1,0 +1,118 @@
+package earning_point
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/volatiletech/sqlboiler/v4/queries"
+)
+
+type Repository struct{}
+
+func (r *Repository) GetSaleReceiptInfo(ctx context.Context) ([]SaleReceiptInfo, error) {
+	var saleReceiptInfos []SaleReceiptInfo
+
+	err := queries.Raw(GET_SALE_RECEIPT_INFO).Bind(ctx, db, &saleReceiptInfos)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return saleReceiptInfos, nil
+}
+
+func (r *Repository) InsertEarningPointHistory(ctx context.Context, customerCode string, receiptNumber string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_EARNING_POINT_HISTORY, customerCode, receiptNumber))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) InsertEarningPointHistoryRankDiamond(ctx context.Context, customerCode string, receiptNumber string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_EARNING_POINT_HISTORY_RANK_DIAMOND, customerCode, receiptNumber))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) GetBillHoangDieu2(ctx context.Context) ([]BillEarningPointResponse, error) {
+	var billEarningPointResponses []BillEarningPointResponse
+
+	err := queries.Raw(GET_BILL_HOANG_DIEU2).Bind(ctx, db, &billEarningPointResponses)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return billEarningPointResponses, nil
+}
+
+func (r *Repository) InsertEarningPointHistoryHoangDieu2(ctx context.Context, billID string, storeID string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_EARNING_POINT_HISTORY_HOANGDIEU2, billID, storeID))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) CalculatorPointRankDaimond(ctx context.Context, receiptNumber string) ([]PointResponse, error) {
+	var pointResponse []PointResponse
+
+	err := queries.Raw(fmt.Sprintf(CALCULATOR_POINT_RANK_DAIMOND, receiptNumber)).Bind(ctx, db, &pointResponse)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pointResponse, nil
+}
+
+func (r *Repository) CalculatorPoint(ctx context.Context, receiptNumber string) ([]PointResponse, error) {
+	var pointResponse []PointResponse
+
+	err := queries.Raw(fmt.Sprintf(CALCULATOR_POINT, receiptNumber)).Bind(ctx, db, &pointResponse)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pointResponse, nil
+}
+
+func (r *Repository) SendNotification(ctx context.Context, customerCode string, point string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(SEND_NOTIFICATION, customerCode, point))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) AddLoyaltyFirstBill(ctx context.Context, customerCode string, point string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(ADD_LOYALTY_FIRST_BILL, customerCode, point))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) AddReferralReward(ctx context.Context, customerCode string, point string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(ADD_REFERRAL_REWARD, customerCode, point))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

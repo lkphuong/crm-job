@@ -5,12 +5,8 @@ import (
 )
 
 var (
-	_repository CustomerRepository
+	_repository Repository
 )
-
-func init() {
-	_repository = CustomerRepository{}
-}
 
 func UpdateCustomerDuplicate(ctx context.Context) error {
 
