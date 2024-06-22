@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/joho/godotenv"
-	voucher_gift "github.com/lkphuong/crm-job/internal/modules/voucher-gift"
+	"github.com/lkphuong/crm-job/internal/modules/customer"
 )
 
 func main() {
@@ -26,7 +26,8 @@ func main() {
 
 	//notification_schedule.DeleteNotificationDraft(ctx)
 	//voucher_gift.VoucherGiftExpire(ctx)
-	voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
+	//voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
+	customer.UpdateCustomer(ctx)
 
 	//r.Run(httpPort)
 

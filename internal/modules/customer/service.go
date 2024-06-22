@@ -2,7 +2,6 @@ package customer
 
 import (
 	"context"
-	"database/sql"
 )
 
 var (
@@ -13,16 +12,16 @@ func init() {
 	_repository = CustomerRepository{}
 }
 
-func UpdateCustomerDuplicate(ctx context.Context, db *sql.DB) error {
+func UpdateCustomerDuplicate(ctx context.Context) error {
 
-	customers, err := _repository.GetCustomerDuplicate(ctx, db)
+	customers, err := _repository.GetCustomerDuplicate(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if len(customers) > 0 {
-		return _repository.UpdateCustomerDuplicate(ctx, db)
+		return _repository.UpdateCustomerDuplicate(ctx)
 	}
 
 	return nil

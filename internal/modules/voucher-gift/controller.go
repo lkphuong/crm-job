@@ -9,7 +9,7 @@ import (
 func InsertVoucherGiftSalePublicCode(ctx context.Context) error {
 	job := cron.New()
 
-	job.AddFunc("* * * * * *", func() {
+	job.AddFunc("0 */10 * * * *", func() {
 		err := InsertVoucherGift(ctx, db)
 
 		if err != nil {
@@ -26,7 +26,7 @@ func InsertVoucherGiftSalePublicCode(ctx context.Context) error {
 func VoucherGiftExpire(ctx context.Context) error {
 	job := cron.New()
 
-	job.AddFunc("0 * * * * *", func() {
+	job.AddFunc("0 0 * * * *", func() {
 		err := UpdateVoucherGiftExpire(ctx, db)
 
 		if err != nil {

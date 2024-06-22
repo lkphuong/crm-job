@@ -12,13 +12,17 @@ func UpdateCustomer(ctx context.Context) error {
 
 	fmt.Println("Update customer duplicate")
 
-	job.AddFunc("0 0 0 * * *", func() {
-		err := UpdateCustomerDuplicate(ctx, db)
+	job.AddFunc("0 0 * * * *", func() {
+		err := UpdateCustomerDuplicate(ctx)
+
+		fmt.Println("clear customer duplicate: ", err)
 
 		if err != nil {
 			return
 		}
 	})
+
+	job.Start()
 
 	return nil
 }
