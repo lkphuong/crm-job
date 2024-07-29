@@ -104,4 +104,24 @@ const (
 		WHERE
 			valid_to = '%s'
 	`
+
+	GET_VOUCHER_DUPLICATE = `
+		SELECT
+			customer_code,
+			ref_sku,
+			count(ref_sku) AS count
+		FROM
+			voucher_gift_tbl
+		WHERE
+			year(valid_to) = year(getdate ())
+			AND ref_sku IN ('CRM03','CRM02')
+			AND delete_flag = 0
+			AND valid_to > getdate ()
+			AND customer_code IS NOT NULL
+		GROUP BY
+			customer_code,
+			ref_sku
+		HAVING
+			count(ref_sku) > 1
+	`
 )

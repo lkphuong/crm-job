@@ -31,6 +31,7 @@ func main() {
 	voucher_gift.VoucherGiftExpire(ctx)
 	voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
 	voucher_gift.UpdateVoucherUsed(ctx)
+	voucher_gift.GetVoucherDuplicate(ctx)
 	customer.UpdateCustomer(ctx)
 	earning_point.EarningPointBillHoangDieu2(ctx)
 	earning_point.EaringPoint(ctx)

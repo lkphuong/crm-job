@@ -1,7 +1,14 @@
 package voucher_gift
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -10,6 +17,58 @@ var (
 
 func init() {
 	repository = Repository{}
+}
+
+func SendNotificationVoucherDuplicate(ctx context.Context) error {
+	vouchers, _ := repository.GetVoucherDuplicate(ctx)
+
+	err := godotenv.Load()
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
+	chatId := os.Getenv("CHAT_ID")
+	teleToken := os.Getenv("TELE_TOKEN")
+
+	if len(vouchers) > 0 {
+		// Create a payload for the API request
+		payload := map[string]interface{}{
+			"chat_id": chatId,
+			"text": struct {
+				Title  string             `json:"title"`
+				Values []VoucherDuplicate `json:"values"`
+			}{
+				Title:  "Voucher Duplicate",
+				Values: vouchers,
+			},
+		}
+
+		// Convert the payload to JSON
+		payloadBytes, err := json.Marshal(payload)
+		if err != nil {
+			return err
+		}
+
+		// Create a new HTTP request
+		req, err := http.NewRequest("POST", fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", teleToken), bytes.NewBuffer(payloadBytes))
+		if err != nil {
+			return err
+		}
+
+		// Set the request headers
+		req.Header.Set("Content-Type", "application/json")
+
+		// Send the request
+		client := http.DefaultClient
+		resp, err := client.Do(req)
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
+		return nil
+	}
+
+	return nil
 }
 
 func UpdateVoucherGiftExpire(ctx context.Context) error {

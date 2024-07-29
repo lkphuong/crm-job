@@ -61,6 +61,18 @@ func (vg *Repository) GetVoucherGiftExpire(ctx context.Context) ([]VoucherGift, 
 	return vouchers, nil
 }
 
+func (vg *Repository) GetVoucherDuplicate(ctx context.Context) ([]VoucherDuplicate, error) {
+	var vouchers []VoucherDuplicate
+
+	err := queries.Raw(GET_VOUCHER_DUPLICATE).Bind(ctx, db, &vouchers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return vouchers, nil
+}
+
 func (vg *Repository) UpdateVoucherGiftUsed(ctx context.Context) error {
 	_, err := db.ExecContext(ctx, UPDATE_VOUCHER_GIFT_USED)
 

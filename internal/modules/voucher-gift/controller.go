@@ -39,11 +39,27 @@ func VoucherGiftExpire(ctx context.Context) error {
 	return nil
 }
 
-func voucherGiftUsed(ctx context.Context) error {
+func VoucherGiftUsed(ctx context.Context) error {
 	job := cron.New()
 
 	job.AddFunc("0 0 */4 * * *", func() {
 		err := UpdateVoucherUsed(ctx)
+
+		if err != nil {
+			return
+		}
+	})
+
+	job.Start()
+
+	return nil
+}
+
+func GetVoucherDuplicate(ctx context.Context) error {
+	job := cron.New()
+
+	job.AddFunc("0 0 * * * *", func() {
+		err := SendNotificationVoucherDuplicate(ctx)
 
 		if err != nil {
 			return

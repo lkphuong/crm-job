@@ -26,3 +26,9 @@ type Coupon struct {
 	End    string `boil:"end" json:"end"`
 	RefSku string `boil:"ref_sku" json:"ref_sku"`
 }
+
+type VoucherDuplicate struct {
+	CustomerCode string `boil:"customer_code" json:"customer_code"`
+	RefSku       string `boil:"ref_sku" json:"ref_sku"`
+	Count        int    `boil:"count" json:"count"`
+}
