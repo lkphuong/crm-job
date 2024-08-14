@@ -19,12 +19,12 @@ func (s *Service) EaringPoint(ctx context.Context) error {
 	}
 
 	for _, saleReceiptInfo := range saleReceiptInfos {
-		if repository.InsertEarningPointHistory(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
+		if err := repository.InsertEarningPointHistory(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
 			return err
 		}
 
 		if saleReceiptInfo.MembershipLevelCode == "KC" {
-			if repository.InsertEarningPointHistoryRankDiamond(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
+			if err := repository.InsertEarningPointHistoryRankDiamond(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
 				return err
 			}
 		}
@@ -50,15 +50,15 @@ func (s *Service) EaringPoint(ctx context.Context) error {
 		}
 
 		if point > 0 {
-			if repository.SendNotification(ctx, saleReceiptInfo.CustomerCode, strconv.Itoa(point)); err != nil {
+			if err := repository.SendNotification(ctx, saleReceiptInfo.CustomerCode, strconv.Itoa(point)); err != nil {
 				return err
 			}
 
-			if repository.AddLoyaltyFirstBill(ctx, saleReceiptInfo.CustomerCode, strconv.Itoa(point)); err != nil {
+			if err := repository.AddLoyaltyFirstBill(ctx, saleReceiptInfo.CustomerCode, strconv.Itoa(point)); err != nil {
 				return err
 			}
 
-			if repository.AddReferralReward(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
+			if err := repository.AddReferralReward(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
 				return err
 			}
 
@@ -77,6 +77,23 @@ func (s *Service) EaringPointHoangDieu2(ctx context.Context) error {
 
 	for _, bill := range billEarningPointHoangDieuStore {
 		if repository.InsertEarningPointHistoryHoangDieu2(ctx, bill.ID, bill.CuahangID); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *Service) ExpiredPoint(ctx context.Context) error {
+	expiredPointResponses, err := repository.GetExpiredPoint30Days(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	for _, expiredPointResponse := range expiredPointResponses {
+
+		if err := repository.InsertAlmostExpiredPoints(ctx, expiredPointResponse.TransactionNumber, expiredPointResponse.CustomerCode, expiredPointResponse.AvalaibleValue); err != nil {
 			return err
 		}
 	}

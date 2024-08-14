@@ -173,4 +173,33 @@ const (
 	ADD_REFERRAL_REWARD = `
 		EXEC dbo.AddReferralReward '%s', '%s';
 	`
+
+	SELECT_EXPIRED_30DAYS = `
+        SELECT
+            earning_point_history_tbl.transaction_number,
+            earning_point_history_tbl.customer_code,
+            earning_point_history_tbl.avalaible_value
+        FROM
+            earning_point_history_tbl
+            JOIN customer_tbl ON earning_point_history_tbl.customer_code = customer_tbl.customer_code
+        WHERE
+            NOT EXISTS (
+                SELECT
+                    almost_expired_points_tbl.transaction_number
+                FROM
+                    almost_expired_points_tbl
+                WHERE
+                    almost_expired_points_tbl.transaction_number = earning_point_history_tbl.transaction_number
+                    AND almost_expired_points_tbl.expired_category = 0)
+                AND(CAST(earning_point_history_tbl.expired_date AS DATE) >= CONVERT(varchar, GETDATE (), 23) 
+                    AND CAST(earning_point_history_tbl.expired_date AS DATE) = CONVERT(varchar, DATEADD(day, 29, GETDATE()), 23))
+                AND earning_point_history_tbl.earning_status = 2
+                AND earning_point_history_tbl.avalaible_value > 0
+                AND earning_point_history_tbl.delete_flag = 0
+    `
+
+	INSERT_ALMOST_EXPIRED_POINTS = `
+                INSERT INTO almost_expired_points_tbl (transaction_number, customer_code, points_value, expired_category, new_flag)
+		        values('%s', '%s', %s, 0, 1)
+    `
 )

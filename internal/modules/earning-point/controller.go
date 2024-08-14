@@ -29,3 +29,13 @@ func EaringPoint(ctx context.Context) {
 
 	job.Start()
 }
+
+func ExpiredPoint30Days(ctx context.Context) {
+	job := cron.New()
+
+	job.AddFunc("0 0 10 * * *", func() {
+		service.ExpiredPoint(ctx)
+	})
+
+	job.Start()
+}

@@ -35,6 +35,8 @@ func main() {
 	customer.UpdateCustomer(ctx)
 	earning_point.EarningPointBillHoangDieu2(ctx)
 	earning_point.EaringPoint(ctx)
+	earning_point.ExpiredPoint30Days(ctx)
+	customer.UpdateJob(ctx)
 
 	//r.Run(httpPort)
 

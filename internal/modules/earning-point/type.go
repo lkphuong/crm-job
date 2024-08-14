@@ -15,3 +15,9 @@ type BillEarningPointResponse struct {
 type PointResponse struct {
 	Point int `boil:"point" json:"point"`
 }
+
+type ExpiredPointResponse struct {
+	TransactionNumber string `boil:"transaction_number" json:"transaction_number"`
+	CustomerCode      string `boil:"customer_code" json:"customer_code"`
+	AvalaibleValue    string `boil:"avalaible_value" json:"avalaible_value"`
+}

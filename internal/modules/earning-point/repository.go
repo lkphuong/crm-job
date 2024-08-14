@@ -116,3 +116,25 @@ func (r *Repository) AddReferralReward(ctx context.Context, customerCode string,
 
 	return nil
 }
+
+func (r *Repository) GetExpiredPoint30Days(ctx context.Context) ([]ExpiredPointResponse, error) {
+	var expiredPointResponses []ExpiredPointResponse
+
+	err := queries.Raw(SELECT_EXPIRED_30DAYS).Bind(ctx, db, &expiredPointResponses)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return expiredPointResponses, nil
+}
+
+func (r *Repository) InsertAlmostExpiredPoints(ctx context.Context, transactionNumber string, customerCode string, pointValue string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_ALMOST_EXPIRED_POINTS, transactionNumber, customerCode, pointValue))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
