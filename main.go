@@ -6,9 +6,6 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/lkphuong/crm-job/internal/modules/customer"
-	earning_point "github.com/lkphuong/crm-job/internal/modules/earning-point"
-	notification_schedule "github.com/lkphuong/crm-job/internal/modules/notification-schedule"
-	voucher_gift "github.com/lkphuong/crm-job/internal/modules/voucher-gift"
 )
 
 func main() {
@@ -27,15 +24,15 @@ func main() {
 
 	//r := gin.Default()
 
-	notification_schedule.DeleteNotificationDraft(ctx)
-	voucher_gift.VoucherGiftExpire(ctx)
-	voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
-	voucher_gift.UpdateVoucherUsed(ctx)
-	voucher_gift.GetVoucherDuplicate(ctx)
-	customer.UpdateCustomer(ctx)
-	earning_point.EarningPointBillHoangDieu2(ctx)
-	earning_point.EaringPoint(ctx)
-	earning_point.ExpiredPoint30Days(ctx)
+	// notification_schedule.DeleteNotificationDraft(ctx)
+	// voucher_gift.VoucherGiftExpire(ctx)
+	// voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
+	// voucher_gift.UpdateVoucherUsed(ctx)
+	// voucher_gift.GetVoucherDuplicate(ctx)
+	// customer.UpdateCustomer(ctx)
+	// earning_point.EarningPointBillHoangDieu2(ctx)
+	// earning_point.EaringPoint(ctx)
+	// earning_point.ExpiredPoint30Days(ctx)
 	customer.UpdateJob(ctx)
 
 	//r.Run(httpPort)

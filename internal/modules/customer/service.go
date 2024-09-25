@@ -33,29 +33,29 @@ func UpdateJobFromCustomerToKhanhHang(ctx context.Context) error {
 	fmt.Println(len(jobCrm))
 
 	//  cập nhật thông tin nghề nghiệp từ bảng customer sang bảng khách hàng
-	// for _, job := range jobCrm {
-	// 	if job.CustomerCode != "" {
-	// 		customer, _ := _repository.GetCustomerPOSByCode(ctx, job.CustomerCode)
-	// 		if customer != nil {
-	// 			if (customer.UpdatedAt <= job.UpdatedAt && customer.Job != job.Job) || customer.Job == "" {
+	for _, job := range jobCrm {
+		if job.CustomerCode != "" {
+			customer, _ := _repository.GetCustomerPOSByCode(ctx, job.CustomerCode)
+			fmt.Println("job customer: ", customer)
+			if customer != nil {
+				if (customer.UpdatedAt <= job.UpdatedAt && customer.Job != job.Job) || customer.Job == "" || customer.Job == "0" {
 
-	// 				err := _repository.UpdateJobOfPOS(ctx, job.CustomerCode, job.Job)
+					err := _repository.UpdateJobOfPOS(ctx, job.CustomerCode, job.Job)
 
-	// 				if err != nil {
-	// 					fmt.Println("Cập nhật thông tin nghề nghiệp từ bảng customer sang bảng khách hàng thất bại")
-	// 				}
+					if err != nil {
+						fmt.Println("Cập nhật thông tin nghề nghiệp từ bảng customer sang bảng khách hàng thất bại")
+					}
 
-	// 			}
-	// 		}
-	// 	}
-	// }
+				}
+			}
+		}
+	}
 
 	//cập nhật thông tin nghề nghiệp từ bảng POS sang bảng khách hàng
 	for _, job := range jobPos {
 		if job.CustomerCode != "" {
-			fmt.Println("job: ", job)
 			customer, _ := _repository.GetCustomerCRMByCode(ctx, job.CustomerCode)
-			fmt.Println("customer: ", customer)
+			fmt.Println("customer job: ", customer)
 			if customer != nil {
 				if (customer.UpdatedAt <= job.UpdatedAt && customer.Job != job.Job) || customer.Job == "none" {
 					err := _repository.UpdateJobOfCRM(ctx, job.CustomerCode, job.Job)

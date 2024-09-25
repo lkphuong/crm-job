@@ -2,6 +2,7 @@ package earning_point
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 )
 
@@ -91,7 +92,10 @@ func (s *Service) ExpiredPoint(ctx context.Context) error {
 		return err
 	}
 
+	fmt.Println("start")
 	for _, expiredPointResponse := range expiredPointResponses {
+
+		fmt.Println("TransactionNumber: ", expiredPointResponse.TransactionNumber)
 
 		if err := repository.InsertAlmostExpiredPoints(ctx, expiredPointResponse.TransactionNumber, expiredPointResponse.CustomerCode, expiredPointResponse.AvalaibleValue); err != nil {
 			return err

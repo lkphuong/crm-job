@@ -114,9 +114,8 @@ const (
 			voucher_gift_tbl
 		WHERE
 			year(valid_to) = year(getdate ())
-			AND ref_sku IN ('CRM03','CRM02')
+			AND ref_sku IN ('CRM03')
 			AND delete_flag = 0
-			AND valid_to > getdate ()
 			AND customer_code IS NOT NULL
 		GROUP BY
 			customer_code,
