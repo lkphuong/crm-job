@@ -25,7 +25,7 @@ func UpdateCustomer(ctx context.Context) error {
 func UpdateJob(ctx context.Context) error {
 	job := cron.New()
 
-	job.AddFunc("0 * * * * *", func() {
+	job.AddFunc("0 0 7 * * *", func() {
 		err := UpdateJobFromCustomerToKhanhHang(ctx)
 
 		if err != nil {

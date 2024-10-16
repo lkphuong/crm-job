@@ -2,6 +2,7 @@ package notification_schedule
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/robfig/cron"
 )
@@ -18,4 +19,16 @@ func DeleteNotificationDraft(ctx context.Context) {
 	})
 
 	job.Start()
+}
+
+func PushNotificationCampaign(ctx context.Context) {
+	job := cron.New()
+
+	job.AddFunc("0 * * * * *", func() {
+		fmt.Println("health check")
+		service.PushNotificationCampaign(ctx, db)
+	})
+
+	job.Start()
+
 }
