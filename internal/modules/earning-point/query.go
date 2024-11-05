@@ -19,7 +19,7 @@ const (
 	`
 
 	GET_SALE_RECEIPT_INFO = `
-		 	select 
+		 	select
 				s.receipt_number, 
 				s.customer_code, 
 				m.membership_level_code, 
@@ -33,6 +33,7 @@ const (
 			where 
 				s.created_at > '2024-01-01 00:00:00' and crm_add_point = 1 
 				and (m.status = 1 or m.status is null) and [value] is null
+                and m.membership_level_code is not null and total > 0
 	`
 
 	INSERT_EARNING_POINT_HISTORY_HOANGDIEU2 = `

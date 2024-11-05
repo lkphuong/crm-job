@@ -14,12 +14,12 @@ type Service struct{}
 
 func (s *Service) EaringPoint(ctx context.Context) error {
 	saleReceiptInfos, err := repository.GetSaleReceiptInfo(ctx)
-
 	if err != nil {
 		return err
 	}
 
 	for _, saleReceiptInfo := range saleReceiptInfos {
+		fmt.Println("Earning point: ", saleReceiptInfo)
 		if err := repository.InsertEarningPointHistory(ctx, saleReceiptInfo.CustomerCode, saleReceiptInfo.ReceiptNumber); err != nil {
 			return err
 		}
@@ -47,7 +47,9 @@ func (s *Service) EaringPoint(ctx context.Context) error {
 				return err
 			}
 
-			point = pointRankNormal[0].Point
+			if len(pointRankNormal) > 0 {
+				point = pointRankNormal[0].Point
+			}
 		}
 
 		if point > 0 {
