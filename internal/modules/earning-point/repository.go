@@ -138,3 +138,27 @@ func (r *Repository) InsertAlmostExpiredPoints(ctx context.Context, transactionN
 
 	return nil
 }
+
+func (r *Repository) GetCurrentPoint(ctx context.Context) ([]CurrentPointResponse, error) {
+	var currentPointResponses []CurrentPointResponse
+
+	err := queries.Raw(GET_CURRENT_POINT).Bind(ctx, db, &currentPointResponses)
+
+	fmt.Println("err: ", err)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return currentPointResponses, nil
+}
+
+func (r *Repository) UpdateNewPoint(ctx context.Context, customerCode string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(UPDATE_NEW_POINT, customerCode))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

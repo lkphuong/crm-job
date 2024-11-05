@@ -106,3 +106,19 @@ func (s *Service) ExpiredPoint(ctx context.Context) error {
 
 	return nil
 }
+
+func (s *Service) UpdateNewPointCustomer(ctx context.Context) error {
+	pointResponses, err := repository.GetCurrentPoint(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, pointResponse := range pointResponses {
+		fmt.Println("Update new point: ", pointResponse)
+		if err := repository.UpdateNewPoint(ctx, pointResponse.CustomerCode); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

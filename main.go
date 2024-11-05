@@ -34,11 +34,14 @@ func main() {
 	voucher_gift.InsertVoucherGiftSalePublicCode(ctx)
 	voucher_gift.UpdateVoucherUsed(ctx)
 	voucher_gift.GetVoucherDuplicate(ctx)
+
 	customer.UpdateCustomer(ctx)
+	customer.UpdateJob(ctx)
+
 	earning_point.EarningPointBillHoangDieu2(ctx)
 	earning_point.EaringPoint(ctx)
 	earning_point.ExpiredPoint30Days(ctx)
-	customer.UpdateJob(ctx)
+	earning_point.UpdateNewPoint(ctx)
 
 	//r.Run(httpPort)
 

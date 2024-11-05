@@ -203,4 +203,63 @@ const (
                 INSERT INTO almost_expired_points_tbl (transaction_number, customer_code, points_value, expired_category, new_flag)
 		        values('%s', '%s', %s, 0, 1)
     `
+
+	GET_CURRENT_POINT = `
+        SELECT 
+            m.customer_code, 
+            m.remain_points, 
+            e.total_points
+        FROM 
+            (
+                SELECT
+                    customer_code, 
+                    remain_points
+                FROM
+                    membership_history_tbl
+                WHERE
+                    status = 1
+                    AND membership_level_code IS NOT NULL
+                    AND remain_points > 0
+                GROUP BY
+                    customer_code, 
+                    remain_points
+            ) AS m
+        JOIN 
+            (
+                SELECT
+                    customer_code, 
+                    SUM(avalaible_value) AS total_points
+                FROM
+                    earning_point_history_tbl
+                WHERE
+                    earning_status = 2
+                    AND expired_date > GETDATE()
+                    AND earning_type IN (0, 1, 4, 5, 6)
+                    AND avalaible_value > 0
+                    AND delete_flag = 0
+                GROUP BY
+                    customer_code
+            ) AS e
+        ON 
+            m.customer_code = e.customer_code
+        WHERE 
+            m.remain_points <> e.total_points;
+    `
+
+	UPDATE_NEW_POINT = `
+        UPDATE
+            earning_point_history_tbl
+        SET
+            update_date = getdate ()
+        WHERE
+            earning_point_history_id = (
+                SELECT
+                    top 1 earning_point_history_id
+                FROM
+                    earning_point_history_tbl
+                WHERE
+                    customer_code = '%s'
+                ORDER BY
+                    earning_point_history_id DESC);
+    `
 )

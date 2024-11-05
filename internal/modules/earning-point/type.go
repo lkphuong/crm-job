@@ -21,3 +21,9 @@ type ExpiredPointResponse struct {
 	CustomerCode      string `boil:"customer_code" json:"customer_code"`
 	AvalaibleValue    string `boil:"avalaible_value" json:"avalaible_value"`
 }
+
+type CurrentPointResponse struct {
+	CustomerCode string  `boil:"customer_code" json:"customer_code"`
+	RemainPoints float64 `boil:"remain_points" json:"remain_points"`
+	TotalPoints  float64 `boil:"total_points" json:"total_points"`
+}
