@@ -2,8 +2,10 @@ package earning_point
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 )
 
@@ -155,6 +157,53 @@ func (r *Repository) GetCurrentPoint(ctx context.Context) ([]CurrentPointRespons
 
 func (r *Repository) UpdateNewPoint(ctx context.Context, customerCode string) error {
 	_, err := db.ExecContext(ctx, fmt.Sprintf(UPDATE_NEW_POINT, customerCode))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) GetEarningPointExpired(ctx context.Context) ([]EarningPointExpired, error) {
+	var earningPointExpiredResponses []EarningPointExpired
+
+	err := queries.Raw(GET_EARNING_POINT_EXPIRED).Bind(ctx, db, &earningPointExpiredResponses)
+
+	fmt.Println("err: ", err)
+	if err != nil {
+		return nil, err
+	}
+
+	return earningPointExpiredResponses, nil
+}
+
+func (r *Repository) InsertEarningPointHistoryExpired(ctx context.Context, param EarningPointExpired) error {
+
+	newUUID := uuid.New()
+
+	_, err := db.ExecContext(
+		ctx,
+		INSERT_EARNING_POINT_HISTORY_EXPIRED,
+		sql.Named("TransactionNumber", newUUID),
+		sql.Named("CustomerCode", param.CustomerCode),
+		sql.Named("StoreCode", param.StoreCode),
+		sql.Named("Value", -param.AvalaibleValue), // Giá trị là số
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) UpdateEarningPointExpired(ctx context.Context, Id int64) error {
+	_, err := db.ExecContext(
+		ctx,
+		UPDATE_EARNING_POINT_EXPIRED,
+		sql.Named("Id", Id),
+	)
 
 	if err != nil {
 		return err

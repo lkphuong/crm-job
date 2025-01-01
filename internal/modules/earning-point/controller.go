@@ -44,8 +44,19 @@ func ExpiredPoint30Days(ctx context.Context) {
 func UpdateNewPoint(ctx context.Context) {
 	job := cron.New()
 	fmt.Println("Finding new point customer")
-	job.AddFunc("0 0 10 * * *", func() {
+	job.AddFunc("0 0 * * * *", func() {
 		service.UpdateNewPointCustomer(ctx)
+	})
+
+	job.Start()
+}
+
+func InsertEarningPointExpired(ctx context.Context) {
+	job := cron.New()
+
+	job.AddFunc("0 0 */2 * * *", func() {
+		fmt.Println("Insert earning point expired")
+		service.InsertEarningPointExpired(ctx)
 	})
 
 	job.Start()

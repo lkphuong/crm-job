@@ -262,4 +262,36 @@ const (
                 ORDER BY
                     earning_point_history_id DESC);
     `
+
+	INSERT_EARNING_POINT_HISTORY_EXPIRED = `
+        INSERT INTO earning_point_history_tbl (
+            transaction_number, 
+            customer_code, 
+            created_date, 
+            activated_date, 
+            expired_date,
+            update_date, 
+            store_code, 
+            earning_type,
+            earning_status,
+            value,
+            avalaible_value
+        )
+        VALUES (@TransactionNumber, @CustomerCode, GETDATE(), GETDATE(), GETDATE(), GETDATE(), @StoreCode, 2, 3, @Value, 0);
+    `
+
+	GET_EARNING_POINT_EXPIRED = `
+        SELECT TOP 100 earning_point_history_id, transaction_number, customer_code, COALESCE(store_code, ''), avalaible_value
+        FROM
+            earning_point_history_tbl
+        WHERE
+            earning_status = 2
+            AND expired_date < GETDATE()
+            AND earning_type IN (0, 1, 4, 5, 6)
+            AND avalaible_value > 0
+            AND delete_flag = 0
+            AND expired_date > '2024-12-10'
+    `
+
+	UPDATE_EARNING_POINT_EXPIRED = `UPDATE earning_point_history_tbl SET earning_status = 3, avalaible_value = 0 WHERE earning_point_history_id = @Id;`
 )

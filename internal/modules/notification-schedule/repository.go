@@ -44,6 +44,16 @@ func (r *Repository) GetFirebaseTokens(ctx context.Context) ([]FirebaseToken, er
 	return firebaseTokens, nil
 }
 
+func (r *Repository) InsertNotificationSchedule(ctx context.Context, db *sql.DB, customerCode string, content string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(INSERT_NOTIFICATION_SCHEDULE, customerCode, content))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *Repository) UpdateNotificationCampaign(ctx context.Context, db *sql.DB, notificationCampaignID int64) error {
 	_, err := db.ExecContext(ctx, fmt.Sprintf(UPDATE_NOTIFICATION_CAMPAIGN, notificationCampaignID))
 

@@ -9,3 +9,8 @@ type NotificationCampaign struct {
 type FirebaseToken struct {
 	FirebaseToken string `boil:"firebase_token" json:"firebase_token"`
 }
+
+type NotificationSchedule struct {
+	CustomerCode        string `boil:"customer_code" json:"customer_code"`
+	NotificationContent string `boil:"notification_content" json:"notification_content"`
+}

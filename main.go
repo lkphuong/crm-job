@@ -42,6 +42,7 @@ func main() {
 	earning_point.EaringPoint(ctx)
 	earning_point.ExpiredPoint30Days(ctx)
 	earning_point.UpdateNewPoint(ctx)
+	earning_point.InsertEarningPointExpired(ctx)
 
 	//r.Run(httpPort)
 

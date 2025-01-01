@@ -27,3 +27,11 @@ type CurrentPointResponse struct {
 	RemainPoints float64 `boil:"remain_points" json:"remain_points"`
 	TotalPoints  float64 `boil:"total_points" json:"total_points"`
 }
+
+type EarningPointExpired struct {
+	EarningPointHistoryId int64   `json:"earning_point_history_id" boil:"earning_point_history_id"`
+	TransactionNumber     string  `json:"transaction_number" boil:"transaction_number"`
+	CustomerCode          string  `json:"customer_code" boil:"customer_code"`
+	StoreCode             string  `json:"store_code" boil:"store_code"`
+	AvalaibleValue        float64 `json:"avalaible_value" boil:"avalaible_value"`
+}

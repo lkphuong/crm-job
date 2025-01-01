@@ -3,11 +3,16 @@ package earning_point
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
+
+	"github.com/lkphuong/crm-job/configs"
+	notification_schedule "github.com/lkphuong/crm-job/internal/modules/notification-schedule"
 )
 
 var (
-	repository Repository
+	repository           Repository
+	notificationSchedule notification_schedule.Repository
 )
 
 type Service struct{}
@@ -115,8 +120,46 @@ func (s *Service) UpdateNewPointCustomer(ctx context.Context) error {
 
 	for _, pointResponse := range pointResponses {
 		fmt.Println("Update new point: ", pointResponse)
+		// #region Update new point
 		if err := repository.UpdateNewPoint(ctx, pointResponse.CustomerCode); err != nil {
 			return err
+		}
+
+		// #region send notification
+		if pointResponse.RemainPoints > pointResponse.TotalPoints {
+			expiredPoint := math.Abs(pointResponse.TotalPoints - pointResponse.RemainPoints)
+
+			if err := notificationSchedule.InsertNotificationSchedule(ctx, db, pointResponse.CustomerCode, fmt.Sprintf(configs.NOTIFICATION_EXPIRED_POINT, expiredPoint, expiredPoint)); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func (s *Service) InsertEarningPointExpired(ctx context.Context) error {
+	expiredPointResponses, err := repository.GetEarningPointExpired(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("expiredPointResponses: ", len(expiredPointResponses))
+
+	for _, expiredPointResponse := range expiredPointResponses {
+		fmt.Println("Insert earning point expired: ", expiredPointResponse)
+
+		if err := repository.InsertEarningPointHistoryExpired(ctx, expiredPointResponse); err != nil {
+			fmt.Println("----------------- 1")
+			fmt.Println("Error: ", err)
+			return nil
+		}
+
+		if err := repository.UpdateEarningPointExpired(ctx, expiredPointResponse.EarningPointHistoryId); err != nil {
+			fmt.Println("----------------- 2")
+			fmt.Println("Error: ", err)
+			return nil
 		}
 	}
 

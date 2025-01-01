@@ -101,6 +101,17 @@ func sendNotificationToAllTokens(ctx context.Context, client *messaging.Client, 
 	return nil
 }
 
+func (s *Service) InsertNotificationSchedule(ctx context.Context, db *sql.DB, title string, body string) error {
+
+	err := repository.InsertNotificationSchedule(ctx, db, title, body)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *Service) DeleteNotificationDraft(ctx context.Context, db *sql.DB) error {
 
 	err := repository.DeleteNotificationDraft(ctx, db)
